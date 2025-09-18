@@ -1,0 +1,68 @@
+/* static/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+h1 {
+    color: #005f73;
+    margin-bottom: 30px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between form elements */
+}
+
+.form-group {
+    text-align: left;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+select, input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box; /* Important for padding */
+}
+
+input[type="submit"] {
+    background-color: #0a9396;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #005f73;
+}
