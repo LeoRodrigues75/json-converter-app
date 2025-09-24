@@ -1,15 +1,12 @@
 import pandas as pd
 import io
 import json
-# The key change is replacing render_template_string with render_template
 from flask import Flask, request, send_file, render_template
 
-# Import the functions from your converters file
 import converters
 
 app = Flask(__name__)
 
-# This route now uses a dedicated HTML file
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -32,6 +29,8 @@ def upload_file():
                     df_final = converters.convert_fuboln(data)
                 elif converter_choice == 'generic':
                     df_final = converters.convert_generic(data)
+                elif converter_choice == 'frequency':
+                    df_final = converters.convert_frequency(data)
                 else:
                     return "Invalid converter type selected", 400
                 
@@ -49,7 +48,6 @@ def upload_file():
             except Exception as e:
                 return f"An error occurred: {e}", 500
     
-    # For GET requests, render the HTML file from the 'templates' folder
     return render_template('index.html')
 
 if __name__ == "__main__":

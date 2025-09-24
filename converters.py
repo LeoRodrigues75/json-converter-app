@@ -1,6 +1,3 @@
-# converters.py
-# This file contains the core data transformation logic for each JSON type.
-
 import pandas as pd
 
 # ===================================================================
@@ -45,7 +42,7 @@ def convert_globosat_planning(data):
     """Converts a Globosat Planning JSON which has a nested 'slots' structure."""
     print("Running Globosat Planning converter...")
     
-    template_columns = [ # This template appears identical to Composite, but is kept separate for future flexibility
+    template_columns = [
         'scheduledDate', 'program|startTime', 'firstExhibition', 'duration',
         'title|duration', 'program|duration', 'showName', 'name', 'title|showName',
         'program|synopsis', 'title|synopsis', 'title|aka', 'title|name',
@@ -148,3 +145,32 @@ def convert_generic(data):
             df = df.drop(col, axis=1).join(flattened_col)
             
     return df
+
+# ===================================================================
+#  5. Converter for FREQUENCY
+# ===================================================================
+def convert_frequency(data):
+    """Converts a FREQUENCY JSON by normalizing the schedule and merging metadata."""
+    print("Running FREQUENCY converter...")
+
+    df = pd.json_normalize(data['schedule'], sep='.')
+
+    for key, value in data.get('channel', {}).items():
+        df[f'channel.{key}'] = value
+
+    for key, value in data.get('output', {}).items():
+        df[f'output.{key}'] = value
+
+    list_cols_to_clean = ['qualifierList', 'parentalRatingDescriptors', 'images', 'localizedMetadata']
+    for col in list_cols_to_clean:
+        if col in df.columns:
+            df[col] = df[col].apply(lambda x: ', '.join(map(str, x)) if isinstance(x, list) else x)
+
+    schedule_cols = [col for col in df.columns if not col.startswith(('channel.', 'output.'))]
+    channel_cols = sorted([col for col in df.columns if col.startswith('channel.')])
+    output_cols = sorted([col for col in df.columns if col.startswith('output.')])
+    
+    final_column_order = channel_cols + output_cols + schedule_cols
+    df_final = df[final_column_order]
+
+    return df_final
